@@ -19,6 +19,13 @@ namespace pv_db_project
         //[2] operation type
         private List<string> commandBuilder = new List<string>(5);
 
+        public DBManager() { }
+
+        public DBManager(string server, string db_name, string login, string password)
+        {
+            Connect(server, db_name, login, password);
+        }
+
         public void Connect(string server, string db_name, string login, string password)
         {
             consStringBuilder = new SqlConnectionStringBuilder();
@@ -29,7 +36,6 @@ namespace pv_db_project
             consStringBuilder.ConnectTimeout = 30;
             connection = new SqlConnection(consStringBuilder.ConnectionString);
             connection.Open();
-
         }
 
         public void Dispose()
@@ -37,7 +43,7 @@ namespace pv_db_project
             connection.Close();
         }
 
-        public void DoOperation(DBOperations operation, string operand?)
+        public void DoOperation(DBOperations operation, string operand)
         {
             switch (operation)
             {
@@ -53,7 +59,7 @@ namespace pv_db_project
                 case DBOperations.GET_ROWS_FROM_COLUMN:
                     commandBuilder[2] = "select";
                     if(operand != null) commandBuilder[3] = operand;
-                    break
+                    break;
 
                 // sets previous value of row, so when setting row you will not select every existing row in column
                 case DBOperations.SELECT_ROW:
@@ -67,8 +73,8 @@ namespace pv_db_project
 
                 // SQL_COMMAND means that you will send command directly to the database and operand is meaned as a full sql command
                 case DBOperations.SQL_COMMAND:
-                    SqlCommand cmd = new SqlCommand(operand, connection);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlCommand _cmd = new SqlCommand(operand, connection);
+                    SqlDataReader reader = _cmd.ExecuteReader();
                     break;
 
                 // sets operation and value of column you have to have to delete record
@@ -83,18 +89,19 @@ namespace pv_db_project
                             if (commandBuilder[3] == null) cmd = $"{commandBuilder[2]} {commandBuilder[1]} from {commandBuilder[0]}";
                             else cmd = $"{commandBuilder[2]} {commandBuilder[1]} from {commandBuilder[0]} where {commandBuilder[1]} = {commandBuilder[3]}";
                             SqlCommand command = new SqlCommand(cmd, connection);
-                            SqlDataReader reader = command.ExecuteReader();
+                            SqlDataReader reader2 = command.ExecuteReader();
                             break;
                         case "update":
                             if (commandBuilder[3] == null) cmd = $"{commandBuilder[2]} {commandBuilder[0]} set {commandBuilder[1]} = {commandBuilder[4]}";
                             else cmd = $"{commandBuilder[2]} {commandBuilder[0]} set {commandBuilder[1]} = {commandBuilder[4]} where {commandBuilder[1]} = {commandBuilder[3]}";
-                            SqlCommand command = new SqlCommand (cmd, connection);
-                            SqlDataReader reader = command.ExecuteReader();
+                            SqlCommand command2 = new SqlCommand (cmd, connection);
+                            SqlDataReader reader3 = command2.ExecuteReader();
                             break;
                         case "delete":
                             cmd = $"delete from {commandBuilder[0]} where {commandBuilder[1]} = {commandBuilder[3]}";
                             break;
                     }
+                    break;
             }
         }
     }

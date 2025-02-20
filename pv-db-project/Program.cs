@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using pv_db_project;
+
+using (DBManager manager = new DBManager("DESKTOP-IK8H6GB", "autopjcovna", "pracovna", "pracovna"))
+{
+    
+}
