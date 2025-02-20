@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 
 namespace pv_db_project
 {
-    internal class DBManager
+    internal class DBManager : IDisposable
     {
         private SqlConnectionStringBuilder consStringBuilder;
         private SqlConnection connection;
@@ -32,33 +32,12 @@ namespace pv_db_project
 
         }
 
-        public void Disconnect()
+        public void Dispose()
         {
             connection.Close();
         }
 
-        public DataTable GetTablesInDB() { return usedDatabase[2]; }
-
-        public void DeleteDBSchemeFromProgram()
-        {
-            usedDatabase = null;
-        }
-
-        public List<DBTable> GetDatabase()
-        {
-            return usedDatabase;
-        }
-
-        public DBTable GetTable(string tableName)
-        {
-            foreach (DBTable t in usedDatabase)
-            {
-                if(t.table_name.Equals(tableName)) return t;
-            }
-
-            throw new Exception("Table with this name doesn't exist.");
-        }
-        public void DoOperation(DBOperations operation, string operand)
+        public void DoOperation(DBOperations operation, string operand?)
         {
             switch (operation)
             {
@@ -72,7 +51,9 @@ namespace pv_db_project
 
                 // sets operation to select rows
                 case DBOperations.GET_ROWS_FROM_COLUMN:
-                    commandBuilder[2] = "select"; break;
+                    commandBuilder[2] = "select";
+                    if(operand != null) commandBuilder[3] = operand;
+                    break
 
                 // sets previous value of row, so when setting row you will not select every existing row in column
                 case DBOperations.SELECT_ROW:
@@ -90,6 +71,30 @@ namespace pv_db_project
                     SqlDataReader reader = cmd.ExecuteReader();
                     break;
 
+                // sets operation and value of column you have to have to delete record
+                case DBOperations.DELETE_RECORD:
+                    commandBuilder[2] = "delete";
+                    break;
+
+                case DBOperations.EXECUTE:
+                    string cmd;
+                    switch (commandBuilder[2]) {
+                        case "select":
+                            if (commandBuilder[3] == null) cmd = $"{commandBuilder[2]} {commandBuilder[1]} from {commandBuilder[0]}";
+                            else cmd = $"{commandBuilder[2]} {commandBuilder[1]} from {commandBuilder[0]} where {commandBuilder[1]} = {commandBuilder[3]}";
+                            SqlCommand command = new SqlCommand(cmd, connection);
+                            SqlDataReader reader = command.ExecuteReader();
+                            break;
+                        case "update":
+                            if (commandBuilder[3] == null) cmd = $"{commandBuilder[2]} {commandBuilder[0]} set {commandBuilder[1]} = {commandBuilder[4]}";
+                            else cmd = $"{commandBuilder[2]} {commandBuilder[0]} set {commandBuilder[1]} = {commandBuilder[4]} where {commandBuilder[1]} = {commandBuilder[3]}";
+                            SqlCommand command = new SqlCommand (cmd, connection);
+                            SqlDataReader reader = command.ExecuteReader();
+                            break;
+                        case "delete":
+                            cmd = $"delete from {commandBuilder[0]} where {commandBuilder[1]} = {commandBuilder[3]}";
+                            break;
+                    }
             }
         }
     }
