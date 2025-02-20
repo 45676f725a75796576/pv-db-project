@@ -109,7 +109,7 @@ namespace pv_db_project
         SET_ROW = 5,
         ADD_TABLE = 6,
         ADD_COLUMN = 7,
-        ADD_RECORD = 8
+        ADD_RECORD = 8,
         SQL_COMMAND = 9,
         DELETE_RECORD = 10,
         DELETE_TABLE = 11,
