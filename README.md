@@ -1,1 +1,2 @@
-# pv-db-project
+# Database edit API
+This API is made to simplify editing databases.

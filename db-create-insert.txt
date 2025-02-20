@@ -1,0 +1,84 @@
+-- create autopujcovna
+
+use autopujcovna
+
+create table pojistovna(
+    id int primary key identity(1,1),
+    nazev nvarchar(39) not null
+);
+
+create table model(
+    id int primary key identity(1,1),
+    znacka nvarchar(19) not null,
+    typ nvarchar(10) not null,
+    varianta nvarchar(39),
+    verze nvarchar(39),
+    oznaceni nvarchar(39) not  null,
+    poc_mis int not null check (poc_mis <= 9)
+);
+
+create table vuz(
+    id int primary key identity(1,1),
+    spz nvarchar(7) not null,
+    vin nvarchar(17) not null,
+    dat_reg date not null, 
+    dat_dal_stk date not null,
+    cis_poj_sm int not null,
+    model_id int foreign key references model(id) not null,
+    pojistovna_id int foreign key references pojistovna(id) not null
+);
+
+create table uzivatel(
+    id int primary key identity(1,1),
+    jmeno nvarchar(30) not null,
+    prijmeni nvarchar(30) not null,
+    cis_rid_pr nvarchar(39) not null,
+    e_mail nvarchar(100) check (e_mail like '%@%.%' or e_mail = null),
+    tel_cis int check (tel_cis > 100000000),
+    check (tel_cis is not null or e_mail is not null)
+);
+
+create table nehoda(
+    id int primary key identity(1,1),
+    odskodne int not null,
+    popis text not null,
+    poc_tr_b int not null,
+    vuz_id int foreign key references vuz(id) not null,
+    uzivatel_id int foreign key references uzivatel(id) not null
+);
+
+INSERT INTO model (znacka, typ, varianta, verze, oznaceni, poc_mis) VALUES
+('Škoda', 'Octavia', 'Kombi', '1.6 TDI', 'Ambition', 5),
+('Volkswagen', 'Golf', 'Hatchback', '2.0 TDI', 'Highline', 5),
+('Ford', 'Focus', 'Sedan', '1.5 EcoBoost', 'Titanium', 5),
+('Toyota', 'Corolla', 'Sedan', 'Hybrid', 'GR Sport', 5),
+('BMW', '3 Series', 'Touring', '320d', 'M Sport', 5);
+
+INSERT INTO pojistovna (nazev) VALUES
+('Kooperativa'),
+('Česká pojišťovna'),
+('Allianz'),
+('Generali'),
+('Uniqa');
+
+INSERT INTO vuz (spz, vin, dat_reg, dat_dal_stk, cis_poj_sm, model_id, pojistovna_id) VALUES
+('1AB1234', 'WVWZZZ1JZXW000001', '2020-05-15', '2024-05-15', 123456, 1, 1),
+('2CD5678', 'WAUZZZ8DZWA000002', '2019-08-20', '2023-08-20', 654321, 2, 2),
+('3EF9012', '1FTFW1EF1EFA00003', '2021-03-10', '2025-03-10', 987654, 3, 3),
+('4GH3456', 'JHMCM82633C000004', '2018-11-25', '2022-11-25', 456789, 4, 4),
+('5IJ7890', 'WBA3A9C51FP000005', '2017-07-30', '2021-07-30', 321098, 5, 5);
+
+INSERT INTO uzivatel (jmeno, prijmeni, cis_rid_pr, e_mail, tel_cis) VALUES
+('Jan', 'Novák', 'CZ1234567890', 'jan.novak@example.com', 777123456),
+('Petr', 'Svoboda', 'CZ0987654321', 'petr.svoboda@example.com', 777654321),
+('Eva', 'Dvořáková', 'CZ1122334455', NULL, 606112233),
+('Lucie', 'Horáková', 'CZ5566778899', 'lucie.horakova@example.com', NULL),
+('Tomáš', 'Král', 'CZ6677889900', 'tomas.kral@example.com', 775987654);
+
+INSERT INTO nehoda (odskodne, popis, poc_tr_b, vuz_id, uzivatel_id) VALUES
+(50000, 'Čelní srážka na dálnici D1.', 3, 1, 1),
+(20000, 'Drobné poškození nárazníku při parkování.', 1, 2, 2),
+(100000, 'Totální škoda po nehodě se zvířetem.', 5, 3, 3),
+(75000, 'Nehoda na křižovatce s nejasným viníkem.', 2, 4, 4),
+(30000, 'Poškození dveří po nárazu jiného vozidla.', 1, 5, 5);
+
