@@ -12,7 +12,7 @@ Copy script from *db-create-insert.txt*.
 DBManager inherits from IDisposable so code can look like this:
 >   using(DBManager manager = new DBManager("localhost", "autopujcovna", "pracovna", "pracovna"))  
 >   {  
->     *Your code*  
+>       *Your code*  
 >   }
 
 ### What is in Program.cs
