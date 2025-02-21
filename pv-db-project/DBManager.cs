@@ -7,21 +7,38 @@ using Microsoft.Data.SqlClient;
 
 namespace pv_db_project
 {
+    /// <summary>
+    /// Manages the database connection and operations.
+    /// </summary>
     internal class DBManager : IDisposable
     {
         private SqlConnectionStringBuilder consStringBuilder;
         private SqlConnection connection;
 
-        // empty constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DBManager"/> class.
+        /// </summary>
         public DBManager() { }
 
-        // constructor with connection parameters and automatic connection
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DBManager"/> class with connection parameters and automatically connects to the database.
+        /// </summary>
+        /// <param name="server">The server name or IP address.</param>
+        /// <param name="db_name">The name of the database.</param>
+        /// <param name="login">The login username.</param>
+        /// <param name="password">The login password.</param>
         public DBManager(string server, string db_name, string login, string password)
         {
             Connect(server, db_name, login, password);
         }
 
-        // set connection parameters and open connection to the database
+        /// <summary>
+        /// Sets the connection parameters and opens a connection to the database.
+        /// </summary>
+        /// <param name="server">The server name or IP address.</param>
+        /// <param name="db_name">The name of the database.</param>
+        /// <param name="login">The login username.</param>
+        /// <param name="password">The login password.</param>
         public void Connect(string server, string db_name, string login, string password)
         {
             consStringBuilder = new SqlConnectionStringBuilder();
@@ -36,10 +53,14 @@ namespace pv_db_project
             connection.Open();
         }
 
-        // returns the connection object
+        /// <summary>
+        /// Gets the SQL connection object.
+        /// </summary>
         public SqlConnection Connection { get { return connection; } }
 
-        // close the connection
+        /// <summary>
+        /// Closes the connection to the database.
+        /// </summary>
         public void Dispose()
         {
             connection.Close();
