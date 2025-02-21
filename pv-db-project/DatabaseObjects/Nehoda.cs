@@ -29,7 +29,7 @@ namespace CsharpDatabaseAPI.DatabaseObjects
             List<string> result = new List<string>();
             while (reader.Read())
             {
-                result.Add(reader.GetString(0));
+                result.Add("" + reader.GetValue(0));
             }
             reader.Close();
             return result.ToArray();
