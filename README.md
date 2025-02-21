@@ -8,7 +8,7 @@ This API is made to simplify editing database autopujcovna, which script to crea
 Open Microsoft SQL Server Management Studio.  
 Create new query.  
 Copy script from *db-create-insert.txt*.
-#### Setting code:
+#### Setting-up code:
 DBManager inherits from IDisposable so code can look like this:
 >   using(DBManager manager = new DBManager("localhost", "autopujcovna", "pracovna", "pracovna"))  
 >   {
