@@ -7,7 +7,13 @@ This API is made to simplify editing database autopujcovna, which script to crea
 ### Setting up:
 Open Microsoft SQL Server Management Studio.  
 Create new query.  
-Copy script.
+Copy script *db-create-insert*.
+#### Setting code:
+DBManager inherits from IDisposable so code can look like this:
+>   using(DBManager manager = new DBManager("localhost", "autopujcovna", "pracovna", "pracovna"))
+>   {
+>     *Your code*
+>   }
 
 ### What is in Program.cs
 Test commands to check if code is working.
