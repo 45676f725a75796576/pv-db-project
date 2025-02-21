@@ -10,7 +10,7 @@ Create new query.
 Copy script from *db-create-insert.txt*.
 #### Setting-up code:
 DBManager inherits from IDisposable so code can look like this:
->   using(DBManager manager = new DBManager("localhost", "autopujcovna", "pracovna", "pracovna"))  
+>   using(DBManager manager = new DBManager("localhost", "autopujcovna", "login", "password"))  
 >   {
 >       *Your code*
 >   }
