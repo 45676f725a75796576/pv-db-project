@@ -24,13 +24,16 @@ namespace pv_db_project
             consStringBuilder = new SqlConnectionStringBuilder();
             consStringBuilder.DataSource = server;
             consStringBuilder.InitialCatalog = db_name;
-            consStringBuilder.UserID = login;
-            consStringBuilder.Password = password;
+            //consStringBuilder.UserID = login;
+            //consStringBuilder.Password = password;
             consStringBuilder.ConnectTimeout = 30;
             consStringBuilder.TrustServerCertificate = true;
+            consStringBuilder.IntegratedSecurity = true;
             connection = new SqlConnection(consStringBuilder.ConnectionString);
             connection.Open();
         }
+
+        public SqlConnection Connection { get { return connection; } }
 
         public void Dispose()
         {
