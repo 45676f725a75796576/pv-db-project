@@ -14,7 +14,7 @@ Test commands to check if code is working.
 
 ### How it works:
 Every object of database has its own class and everyone has same methods.
-#### IDBObject:
+#### IDBObject.cs
 Interface for every table.
 Create new table in MSSMS and to modify it create new class, that will inherit this interface.  
 There is also small information about what each method should do.
