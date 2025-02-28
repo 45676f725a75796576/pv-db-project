@@ -50,7 +50,7 @@ namespace pv_db_project
             consStringBuilder.Password = password;
             consStringBuilder.ConnectTimeout = 30;
             consStringBuilder.TrustServerCertificate = true;
-            consStringBuilder.IntegratedSecurity = true;
+            //consStringBuilder.IntegratedSecurity = true;
             connection = new SqlConnection(consStringBuilder.ConnectionString);
             connection.Open();
         }
